@@ -7,6 +7,8 @@ import lombok.Setter;
 
 import javax.persistence.*;
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
 
 @Entity
@@ -34,6 +36,10 @@ public class Post {
 
     @ManyToOne
     private User user;
+
+
+    @OneToMany
+    private Set<Comment> comments = new HashSet<Comment>();
 
 
 
