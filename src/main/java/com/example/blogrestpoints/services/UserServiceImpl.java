@@ -3,13 +3,16 @@ package com.example.blogrestpoints.services;
 import com.example.blogrestpoints.entity.User;
 import com.example.blogrestpoints.exception.ResourceNotFoundException;
 import com.example.blogrestpoints.payload.UserDto;
+import com.example.blogrestpoints.payload.UserResponse;
 import com.example.blogrestpoints.repositry.UserRepo;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 
@@ -63,10 +66,22 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
-    public List<UserDto> getAllUsers() {
-        List<User> users = userRepo.findAll();
+    public UserResponse getAllUsers(Integer pageNo, Integer pageSize) {
+
+        Pageable pageable = PageRequest.of(pageNo,pageSize);
+        Page<User> page = this.userRepo.findAll(pageable);
+
+        List<User> users = page.getContent();
         List<UserDto> collect = users.stream().map(user -> this.modelMapper.map(user, UserDto.class)).collect(Collectors.toList());
-        return collect;
+
+        UserResponse userResponse = new UserResponse();
+        userResponse.setContent(collect);
+        userResponse.setPageNo(page.getNumber());
+        userResponse.setPageSize(page.getSize());
+        userResponse.setTotalPages(page.getTotalPages());
+        userResponse.setTotalElements(page.getTotalElements());
+
+        return userResponse;
 
     }
 }

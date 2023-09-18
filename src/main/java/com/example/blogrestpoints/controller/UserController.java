@@ -1,7 +1,9 @@
 package com.example.blogrestpoints.controller;
 
 import com.example.blogrestpoints.payload.ApiResponse;
+import com.example.blogrestpoints.payload.PostResponse;
 import com.example.blogrestpoints.payload.UserDto;
+import com.example.blogrestpoints.payload.UserResponse;
 import com.example.blogrestpoints.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -15,12 +17,10 @@ import java.util.List;
 @RequestMapping("/api/users")
 public class UserController {
 
-    private final UserService userService;
+
 
     @Autowired
-    public UserController(UserService userService) {
-        this.userService = userService;
-    }
+    private UserService userService;
 
     @PostMapping
     public ResponseEntity<UserDto> createUser(@Valid @RequestBody UserDto userDto) {
@@ -46,9 +46,13 @@ public class UserController {
         return new ResponseEntity<>(user, HttpStatus.OK);
     }
 
-    @GetMapping
-    public ResponseEntity<List<UserDto>> getAllUsers() {
-        List<UserDto> users = userService.getAllUsers();
-        return new ResponseEntity<>(users, HttpStatus.OK);
+    @GetMapping()
+    public ResponseEntity<UserResponse> getAllUsers(
+            @RequestParam(value = "pageNo",defaultValue = "0",required = false) Integer pageNo,
+            @RequestParam(value = "pageSize",defaultValue = "10",required = false) Integer pageSize
+    )
+     {
+        UserResponse result = userService.getAllUsers(pageNo, pageSize);
+        return new ResponseEntity<UserResponse>(result,HttpStatus.OK);
     }
 }

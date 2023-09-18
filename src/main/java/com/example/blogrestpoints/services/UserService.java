@@ -1,6 +1,8 @@
 package com.example.blogrestpoints.services;
 
+import com.example.blogrestpoints.payload.PostResponse;
 import com.example.blogrestpoints.payload.UserDto;
+import com.example.blogrestpoints.payload.UserResponse;
 
 import java.util.List;
 
@@ -11,6 +13,6 @@ public interface UserService {
     UserDto updateUser(UserDto userDto,Integer id);
     void deleteUser(Integer id);
     UserDto getUserById(Integer id);
-    List<UserDto> getAllUsers();
+    UserResponse getAllUsers(Integer pageNo, Integer pageSize);
 
 }
